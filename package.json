@@ -1,5 +1,5 @@
 {
-  "name": "@wozardlozard/discord",
+  "name": "@wozardlozard/discordjs",
   "version": "13.0.0",
   "description": "A powerful library for interacting with the Discord API",
   "main": "./src/index.js",
