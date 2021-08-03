@@ -1,5 +1,5 @@
 {
-  "name": "discord.js",
+  "name": "@wozardlozard/discord",
   "version": "13.0.0",
   "description": "A powerful library for interacting with the Discord API",
   "main": "./src/index.js",
@@ -14,21 +14,11 @@
     "import": "./src/index.mjs"
   },
   "scripts": {
-    "test": "npm run lint && npm run docs:test && npm run lint:typings",
-    "test:typescript": "tsc",
-    "docs": "docgen --source src --custom docs/index.yml --output docs/docs.json",
-    "docs:test": "docgen --source src --custom docs/index.yml",
-    "lint": "eslint src",
-    "lint:fix": "eslint src --fix",
-    "lint:typings": "tslint typings/index.d.ts",
-    "prettier": "prettier --write src/**/*.js typings/**/*.ts",
-    "prepublishOnly": "npm run test && gen-esm-wrapper ./src/index.js ./src/index.mjs",
-    "prepare": "is-ci || husky install",
-    "changelog": "conventional-changelog -p angular -i RELEASE_CHANGELOG.md -s"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/discordjs/discord.js.git"
+    "url": "git+https://github.com/discordjs/discord.js.git"
   },
   "keywords": [
     "discord",
