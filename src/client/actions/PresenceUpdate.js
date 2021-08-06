@@ -12,7 +12,7 @@ class PresenceUpdateAction extends Action {
     if (presence) {
       old = presence._clone();
     }
-    presence = guild.presences.add(Object.assign(data, { guild }), false);
+    presence = guild.presences._add(Object.assign(data, { guild }), false);
     if (c.listenerCount(Events.PRESENCE_UPDATE)) {
       c.emit(Events.PRESENCE_UPDATE, old, presence);
     }

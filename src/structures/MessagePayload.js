@@ -49,7 +49,7 @@ class MessagePayload {
   }
 
   /**
-   * Whether or not the target is a webhook
+   * Whether or not the target is a {@link Webhook} or a {@link WebhookClient}
    * @type {boolean}
    * @readonly
    */
@@ -60,7 +60,7 @@ class MessagePayload {
   }
 
   /**
-   * Whether or not the target is a user
+   * Whether or not the target is a {@link User}
    * @type {boolean}
    * @readonly
    */
@@ -71,7 +71,7 @@ class MessagePayload {
   }
 
   /**
-   * Whether or not the target is a message
+   * Whether or not the target is a {@link Message}
    * @type {boolean}
    * @readonly
    */
@@ -81,7 +81,7 @@ class MessagePayload {
   }
 
   /**
-   * Wether or not the target is a message manager
+   * Wether or not the target is a {@link MessageManager}
    * @type {boolean}
    * @readonly
    */
@@ -91,7 +91,7 @@ class MessagePayload {
   }
 
   /**
-   * Whether or not the target is an interaction
+   * Whether or not the target is an {@link Interaction} or an {@link InteractionWebhook}
    * @type {boolean}
    * @readonly
    */
@@ -167,9 +167,8 @@ class MessagePayload {
 
     let message_reference;
     if (typeof this.options.reply === 'object') {
-      const message_id = this.isMessage
-        ? this.target.channel.messages.resolveId(this.options.reply.messageReference)
-        : this.target.messages.resolveId(this.options.reply.messageReference);
+      const reference = this.options.reply.messageReference;
+      const message_id = this.isMessage ? reference.id ?? reference : this.target.messages.resolveId(reference);
       if (message_id) {
         message_reference = {
           message_id,
@@ -203,7 +202,26 @@ class MessagePayload {
   async resolveFiles() {
     if (this.files) return this;
 
-    this.files = await Promise.all(this.options.files?.map(file => this.constructor.resolveFile(file)) ?? []);
+    const embedLikes = [];
+    if (this.isInteraction || this.isWebhook) {
+      if (this.options.embeds) {
+        embedLikes.push(...this.options.embeds);
+      }
+    } else if (this.options.embeds && this.options.embeds[0]) {
+      embedLikes.push(this.options.embeds[0]);
+    }
+
+    const fileLikes = [];
+    if (this.options.files) {
+      fileLikes.push(...this.options.files);
+    }
+    for (const embed of embedLikes) {
+      if (embed.files) {
+        fileLikes.push(...embed.files);
+      }
+    }
+
+    this.files = await Promise.all(fileLikes.map(f => this.constructor.resolveFile(f)));
     return this;
   }
 
@@ -243,7 +261,7 @@ class MessagePayload {
   }
 
   /**
-   * Creates a `MessagePayload` from user-level arguments.
+   * Creates a {@link MessagePayload} from user-level arguments.
    * @param {MessageTarget} target Target to send to
    * @param {string|MessageOptions|WebhookMessageOptions} options Options or content to use
    * @param {MessageOptions|WebhookMessageOptions} [extra={}] - Extra options to add onto specified options

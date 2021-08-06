@@ -410,8 +410,11 @@ class Util extends null {
     errorMessage = `Expected a string, got ${data} instead.`,
     allowEmpty = true,
   ) {
-    if (typeof data !== 'string') throw new error(errorMessage);
+    if (typeof data !== 'string' && typeof data !== 'number') throw new error(errorMessage);
+    if (typeof data === 'number') data = data.toString();
+
     if (!allowEmpty && data.length === 0) throw new error(errorMessage);
+    
     return data;
   }
 
@@ -634,6 +637,21 @@ class Util extends null {
     return new Promise(resolve => {
       setTimeout(resolve, ms);
     });
+  }
+
+  /**
+   * Creates a sweep filter that sweeps archived threads
+   * @param {number} [lifetime=14400] How long a thread has to be archived to be valid for sweeping
+   * @returns {SweepFilter}
+   */
+  static archivedThreadSweepFilter(lifetime = 14400) {
+    const filter = require('./LimitedCollection').filterByLifetime({
+      lifetime,
+      getComparisonTimestamp: e => e.archiveTimestamp,
+      excludeFromSweep: e => !e.archived,
+    });
+    filter.isDefault = true;
+    return filter;
   }
 }
 

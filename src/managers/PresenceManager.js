@@ -19,7 +19,8 @@ class PresenceManager extends CachedManager {
    */
 
   _add(data, cache) {
-    return super._add(data, cache, { id: data.user.id });
+    const existing = this.cache.get(data.user.id);
+    return existing ? existing._patch(data) : super._add(data, cache, { id: data.user.id });
   }
 
   /**
