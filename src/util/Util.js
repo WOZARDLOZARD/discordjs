@@ -410,8 +410,7 @@ class Util extends null {
     errorMessage = `Expected a string, got ${data} instead.`,
     allowEmpty = true,
   ) {
-    if (typeof data !== 'string' && typeof data !== 'number') throw new error(errorMessage);
-    if (typeof data === 'number') data = data.toString();
+    if (typeof data !== 'string') data = data.toString();
 
     if (!allowEmpty && data.length === 0) throw new error(errorMessage);
     
