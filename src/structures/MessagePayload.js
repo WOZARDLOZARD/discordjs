@@ -107,7 +107,7 @@ class MessagePayload {
    */
   makeContent() {
     let content;
-    if (this.options.content === null) {
+    if (this.options.content === null || this.options.content === "") {
       content = '';
     } else if (typeof this.options.content !== 'undefined') {
       content = Util.verifyString(this.options.content, RangeError, 'MESSAGE_CONTENT_TYPE', false);
