@@ -8,13 +8,6 @@ const Util = require('../util/Util');
  */
 class MessageEmbed {
   /**
-   * @name MessageEmbed
-   * @kind constructor
-   * @memberof MessageEmbed
-   * @param {MessageEmbed|MessageEmbedOptions} [data={}] MessageEmbed to clone or raw embed data
-   */
-
-  /**
    * A `Partial` object is a representation of any existing object.
    * This object contains between 0 and all of the original objects parameters.
    * This is true regardless of whether the parameters are optional in the base object.
@@ -37,6 +30,10 @@ class MessageEmbed {
    * @property {Partial<MessageEmbedFooter>} [footer] The footer of this embed
    */
 
+  // eslint-disable-next-line valid-jsdoc
+  /**
+   * @param {MessageEmbed|MessageEmbedOptions|APIEmbed} [data={}] MessageEmbed to clone or raw embed data
+   */
   constructor(data = {}, skipValidation = false) {
     this.setup(data, skipValidation);
   }
@@ -118,11 +115,11 @@ class MessageEmbed {
      */
     this.thumbnail = data.thumbnail
       ? {
-        url: data.thumbnail.url,
-        proxyURL: data.thumbnail.proxyURL ?? data.thumbnail.proxy_url,
-        height: data.thumbnail.height,
-        width: data.thumbnail.width,
-      }
+          url: data.thumbnail.url,
+          proxyURL: data.thumbnail.proxyURL ?? data.thumbnail.proxy_url,
+          height: data.thumbnail.height,
+          width: data.thumbnail.width,
+        }
       : null;
 
     /**
@@ -140,11 +137,11 @@ class MessageEmbed {
      */
     this.image = data.image
       ? {
-        url: data.image.url,
-        proxyURL: data.image.proxyURL ?? data.image.proxy_url,
-        height: data.image.height,
-        width: data.image.width,
-      }
+          url: data.image.url,
+          proxyURL: data.image.proxyURL ?? data.image.proxy_url,
+          height: data.image.height,
+          width: data.image.width,
+        }
       : null;
 
     /**
@@ -163,11 +160,11 @@ class MessageEmbed {
      */
     this.video = data.video
       ? {
-        url: data.video.url,
-        proxyURL: data.video.proxyURL ?? data.video.proxy_url,
-        height: data.video.height,
-        width: data.video.width,
-      }
+          url: data.video.url,
+          proxyURL: data.video.proxyURL ?? data.video.proxy_url,
+          height: data.video.height,
+          width: data.video.width,
+        }
       : null;
 
     /**
@@ -185,11 +182,11 @@ class MessageEmbed {
      */
     this.author = data.author
       ? {
-        name: data.author.name,
-        url: data.author.url,
-        iconURL: data.author.iconURL ?? data.author.icon_url,
-        proxyIconURL: data.author.proxyIconURL ?? data.author.proxy_icon_url,
-      }
+          name: data.author.name,
+          url: data.author.url,
+          iconURL: data.author.iconURL ?? data.author.icon_url,
+          proxyIconURL: data.author.proxyIconURL ?? data.author.proxy_icon_url,
+        }
       : null;
 
     /**
@@ -205,9 +202,9 @@ class MessageEmbed {
      */
     this.provider = data.provider
       ? {
-        name: data.provider.name,
-        url: data.provider.name,
-      }
+          name: data.provider.name,
+          url: data.provider.name,
+        }
       : null;
 
     /**
@@ -224,10 +221,10 @@ class MessageEmbed {
      */
     this.footer = data.footer
       ? {
-        text: data.footer.text,
-        iconURL: data.footer.iconURL ?? data.footer.icon_url,
-        proxyIconURL: data.footer.proxyIconURL ?? data.footer.proxy_icon_url,
-      }
+          text: data.footer.text,
+          iconURL: data.footer.iconURL ?? data.footer.icon_url,
+          proxyIconURL: data.footer.proxyIconURL ?? data.footer.proxy_icon_url,
+        }
       : null;
 
     /**
@@ -317,6 +314,16 @@ class MessageEmbed {
   }
 
   /**
+   * Sets the embed's fields (max 25).
+   * @param {...EmbedFieldData|EmbedFieldData[]} fields The fields to set
+   * @returns {MessageEmbed}
+   */
+  setFields(...fields) {
+    this.spliceFields(0, this.fields.length, fields);
+    return this;
+  }
+
+  /**
    * Sets the author of this embed.
    * @param {string} name The name of the author
    * @param {string} [iconURL] The icon URL of the author
@@ -381,7 +388,8 @@ class MessageEmbed {
 
   /**
    * Sets the timestamp of this embed.
-   * @param {Date|number} [timestamp=Date.now()] The timestamp or date
+   * @param {Date|number|null} [timestamp=Date.now()] The timestamp or date.
+   * If `null` then the timestamp will be unset (i.e. when editing an existing {@link MessageEmbed})
    * @returns {MessageEmbed}
    */
   setTimestamp(timestamp = Date.now()) {
