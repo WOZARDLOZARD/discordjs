@@ -416,8 +416,6 @@ class Util extends null {
       } catch {
         throw new error(errorMessage);
       }
-    } else {
-      throw new error(errorMessage);
     }
     
     if (!allowEmpty && data.length === 0) throw new error(errorMessage);
