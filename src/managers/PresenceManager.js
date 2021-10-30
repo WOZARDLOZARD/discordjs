@@ -19,7 +19,7 @@ class PresenceManager extends CachedManager {
    */
 
   _add(data, cache) {
-    return super._add(data, cache, { id: data.user.id });
+    return super._add(data, cache, { id: (data.user) ? data.user.id : data.userId });
   }
 
   /**
