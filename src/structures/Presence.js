@@ -105,6 +105,8 @@ class Presence extends Base {
        * @property {?ClientPresenceStatus} desktop The current presence in the desktop application
        */
       this.clientStatus = data.client_status;
+    } else if ('clientStatus' in data) {
+      this.clientStatus = data.clientStatus;
     } else {
       this.clientStatus ??= null;
     }
