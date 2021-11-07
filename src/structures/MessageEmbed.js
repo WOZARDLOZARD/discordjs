@@ -226,6 +226,12 @@ class MessageEmbed {
           proxyIconURL: data.footer.proxyIconURL ?? data.footer.proxy_icon_url,
         }
       : null;
+
+    /**
+     * The files of this embed
+     * @type {Array<FileOptions|string|MessageAttachment>}
+     */
+    this.files = data.files || [];
   }
 
   /**
