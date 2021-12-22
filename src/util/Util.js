@@ -417,8 +417,7 @@ class Util extends null {
         throw new error(errorMessage);
       }
     }
-    
-    if (!allowEmpty && data.length === 0) throw new error(errorMessage);
+
     return data;
   }
 

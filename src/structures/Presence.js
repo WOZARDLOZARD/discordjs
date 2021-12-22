@@ -87,7 +87,7 @@ class Presence extends Base {
        * The activities of this presence
        * @type {Activity[]}
        */
-      if (data.activities.length > 0 && data.activities[0].constructor && data.activities[0].constructor.name === "Activity") {
+      if (data.activities.length > 0 && data.activities[0] instanceof Activity) {
         this.activities = data.activities;
       } else {
         this.activities = data.activities.map(activity => new Activity(this, activity));
