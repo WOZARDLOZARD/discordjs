@@ -7,7 +7,7 @@ class MessageUpdateAction extends Action {
     const channel = this.getChannel(data);
     if (channel) {
       if (!channel.isText()) return {};
-      
+
       const { id, channel_id, guild_id, author, timestamp, type } = data;
       const message = this.getMessage({ id, channel_id, guild_id, author, timestamp, type }, channel);
       if (message) {

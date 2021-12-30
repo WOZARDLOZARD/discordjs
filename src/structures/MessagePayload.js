@@ -1,5 +1,6 @@
 'use strict';
 
+const { Buffer } = require('node:buffer');
 const BaseMessageComponent = require('./BaseMessageComponent');
 const MessageEmbed = require('./MessageEmbed');
 const { RangeError } = require('../errors');
@@ -66,7 +67,7 @@ class MessagePayload {
    */
   get isUser() {
     const User = require('./User');
-    const GuildMember = require('./GuildMember');
+    const { GuildMember } = require('./GuildMember');
     return this.target instanceof User || this.target instanceof GuildMember;
   }
 
@@ -76,7 +77,7 @@ class MessagePayload {
    * @readonly
    */
   get isMessage() {
-    const Message = require('./Message');
+    const { Message } = require('./Message');
     return this.target instanceof Message;
   }
 
@@ -177,6 +178,16 @@ class MessagePayload {
       }
     }
 
+    const attachments = this.options.files?.map((file, index) => ({
+      id: index.toString(),
+      description: file.description,
+    }));
+    if (Array.isArray(this.options.attachments)) {
+      this.options.attachments.push(...(attachments ?? []));
+    } else {
+      this.options.attachments = attachments;
+    }
+
     this.data = {
       content,
       tts,
@@ -202,26 +213,7 @@ class MessagePayload {
   async resolveFiles() {
     if (this.files) return this;
 
-    const embedLikes = [];
-    if (this.isInteraction || this.isWebhook) {
-      if (this.options.embeds) {
-        embedLikes.push(...this.options.embeds);
-      }
-    } else if (this.options.embeds && this.options.embeds[0]) {
-      embedLikes.push(this.options.embeds[0]);
-    }
-
-    const fileLikes = [];
-    if (this.options.files) {
-      fileLikes.push(...this.options.files);
-    }
-    for (const embed of embedLikes) {
-      if (embed.files) {
-        fileLikes.push(...embed.files);
-      }
-    }
-
-    this.files = await Promise.all(fileLikes.map(f => this.constructor.resolveFile(f)));
+    this.files = await Promise.all(this.options.files?.map(file => this.constructor.resolveFile(file)) ?? []);
     return this;
   }
 
