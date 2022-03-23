@@ -12,6 +12,8 @@ This package is a custom branch of the Discord.js library, with better support f
 
 **Important: The `GUILD_PRESENCES` privileged intent is required to receive presence-related data and events! Please ensure that it is enabled before using this package.**
 
+Usage of all other components of this library is the same as the main discord.js library. Please consult the [discord.js documentation](https://discord.js.org/#/docs/discord.js/stable/general/welcome) for more information.
+
 ##### Importing the package:
 ```js
 const Discord = require('@wozardlozard/discord.js');

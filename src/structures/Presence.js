@@ -87,10 +87,10 @@ class Presence extends Base {
        * The activities of this presence
        * @type {Activity[]}
        */
-      if (data.activities.length > 0 && data.activities[0] instanceof Activity) {
-        this.activities = data.activities;
+      if (data.activities.length > 0) {
+        this.activities = data.activities.map(activity => (activity instanceof Activity) ? activity : new Activity(this, activity));
       } else {
-        this.activities = data.activities.map(activity => new Activity(this, activity));
+        this.activities = [];
       }
     } else {
       this.activities ??= [];
@@ -277,7 +277,7 @@ class Activity {
      * Creation date of the activity
      * @type {number}
      */
-    this.createdTimestamp = new Date(data.created_at).getTime();
+    this.createdTimestamp = (data.created_at && !isNaN(new Date(data.created_at))) ? new Date(data.created_at).getTime() : (data.timestamps && data.timestamps.start && !isNaN(new Date(data.timestamps.start))) ? new Date(data.timestamps.start).getTime() : null;
   }
 
   /**
@@ -303,7 +303,7 @@ class Activity {
    * @readonly
    */
   get createdAt() {
-    return new Date(this.createdTimestamp);
+    return this.createdTimestamp ? new Date(this.createdTimestamp) : null;
   }
 
   /**
