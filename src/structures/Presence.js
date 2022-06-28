@@ -105,8 +105,6 @@ class Presence extends Base {
        * @property {?ClientPresenceStatus} desktop The current presence in the desktop application
        */
       this.clientStatus = data.client_status;
-    } else if ('clientStatus' in data) {
-      this.clientStatus = data.clientStatus;
     } else {
       this.clientStatus ??= null;
     }
@@ -303,7 +301,7 @@ class Activity {
    * @readonly
    */
   get createdAt() {
-    return this.createdTimestamp ? new Date(this.createdTimestamp) : null;
+    return new Date(this.createdTimestamp);
   }
 
   /**
@@ -357,13 +355,21 @@ class RichPresenceAssets {
    * @returns {?string}
    */
   smallImageURL({ format, size } = {}) {
-    return (
-      this.smallImage &&
-      this.activity.presence.client.rest.cdn.AppAsset(this.activity.applicationId, this.smallImage, {
-        format,
-        size,
-      })
-    );
+    if (!this.smallImage) return null;
+    if (this.smallImage.includes(':')) {
+      const [platform, id] = this.smallImage.split(':');
+      switch (platform) {
+        case 'mp':
+          return `https://media.discordapp.net/${id}`;
+        default:
+          return null;
+      }
+    }
+
+    return this.activity.presence.client.rest.cdn.AppAsset(this.activity.applicationId, this.smallImage, {
+      format,
+      size,
+    });
   }
 
   /**
@@ -373,11 +379,20 @@ class RichPresenceAssets {
    */
   largeImageURL({ format, size } = {}) {
     if (!this.largeImage) return null;
-    if (/^spotify:/.test(this.largeImage)) {
-      return `https://i.scdn.co/image/${this.largeImage.slice(8)}`;
-    } else if (/^twitch:/.test(this.largeImage)) {
-      return `https://static-cdn.jtvnw.net/previews-ttv/live_user_${this.largeImage.slice(7)}.png`;
+    if (this.largeImage.includes(':')) {
+      const [platform, id] = this.largeImage.split(':');
+      switch (platform) {
+        case 'mp':
+          return `https://media.discordapp.net/${id}`;
+        case 'spotify':
+          return `https://i.scdn.co/image/${id}`;
+        case 'twitch':
+          return `https://static-cdn.jtvnw.net/previews-ttv/live_user_${id}.png`;
+        default:
+          return null;
+      }
     }
+
     return this.activity.presence.client.rest.cdn.AppAsset(this.activity.applicationId, this.largeImage, {
       format,
       size,
