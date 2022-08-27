@@ -1,6 +1,7 @@
 'use strict';
 
 const Action = require('./Action');
+const Events = require('../../util/Events');
 
 class PresenceUpdateAction extends Action {
   handle(data) {
@@ -14,8 +15,8 @@ class PresenceUpdateAction extends Action {
         old = presence._clone();
       }
       presence = guild.presences._add(Object.assign(data, { guild }), false);
-      if (c.listenerCount(Events.PRESENCE_UPDATE)) {
-        c.emit(Events.PRESENCE_UPDATE, old, presence);
+      if (c.listenerCount(Events.PresenceUpdate)) {
+        c.emit(Events.PresenceUpdate, old, presence);
       }
     }
   }
