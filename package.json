@@ -1,6 +1,6 @@
 {
   "name": "@wozardlozard/discord.js",
-  "version": "14.6.1",
+  "version": "14.7.0",
   "description": "A custom version of the Discord.js library, with better support for presences.",
   "main": "./src/index.js",
   "types": "./typings/index.d.ts",
